@@ -1,10 +1,15 @@
 'use client'
 
 import { useState } from 'react';
-
 import { registerUser } from "@/app/actions";
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/hooks/useAuth';
 
 const RegistrationForm = () => {
+    const router = useRouter();
+    const { auth, setAuth } = useAuth();
+
     const [error, setError] = useState("");
 
 
@@ -15,8 +20,14 @@ const RegistrationForm = () => {
             const formData = new FormData(event.currentTarget);
             const userCreation = await registerUser(formData)
 
+            const modifiedUser = JSON.parse(userCreation);
+
             if (!userCreation?.error) {
-                redirect("/login");
+                Cookies.set('auth', JSON.stringify(modifiedUser));
+                setAuth(modifiedUser);
+                router.push('/');
+
+                // redirect("/login");
             } else {
                 setError(userCreation?.error);
             }

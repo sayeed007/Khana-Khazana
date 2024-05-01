@@ -4,15 +4,13 @@ import { revalidatePath } from 'next/cache'
 import { createUser, findUserByCredentials, getRecipeById, toggleUserFavourite } from "@/db/queries";
 import { redirect } from "next/navigation";
 
-import { Resend } from 'resend';
-import EmailTemplate from '@/components/payments/EmailTemplate';
 
 async function registerUser(formData) {
     const user = Object.fromEntries(formData);
     const created = await createUser(user);
 
 
-    return created;
+    return JSON.stringify(created);
 }
 
 async function performLogin(formData) {
@@ -20,6 +18,7 @@ async function performLogin(formData) {
         const credential = {};
         credential.email = formData.get("email");
         credential.password = formData.get("password");
+
         const found = await findUserByCredentials(credential);
         return found;
     } catch (error) {
@@ -47,30 +46,13 @@ async function addGoingEvent(eventId, user) {
     redirect('/');
 }
 
-async function sendEmail(eventId, user) {
+
+async function toggleUserFavouriteAction(userID, recipeId) {
     try {
-        // console.log(eventId, user, process.env.RESEND_API_KEY);
-        const event = await getRecipeById(eventId);
-        const resend = new Resend(process.env.RESEND_API_KEY);
-        const message = `Dear ${user?.name}, you have been successfully registered for the event, ${event?.name}. Please carry this email and your official id to the venue. We are excited to have you here.`;
-        const sent = await resend.emails.send({
-            from: "noreply@noreply.tapascript.io",
-            to: user?.email,
-            subject: "Successfully Registered for the event!",
-            react: EmailTemplate({ message })
-        });
-    } catch (error) {
-        throw error;
-    }
-}
 
+        if (userID && recipeId) {
+            const userFavourite = await toggleUserFavourite(userID, recipeId);
 
-async function toggleUserFavouriteAction(auth, recipeId) {
-    try {
-        if (auth && recipeId) {
-            const userFavourite = await toggleUserFavourite(auth, recipeId);
-
-            console.log(userFavourite);
             return JSON.stringify(userFavourite);
         }
     } catch (error) {
@@ -80,4 +62,4 @@ async function toggleUserFavouriteAction(auth, recipeId) {
 
 
 
-export { registerUser, performLogin, addInterestedEvent, addGoingEvent, sendEmail, toggleUserFavouriteAction };
+export { registerUser, performLogin, addInterestedEvent, addGoingEvent, toggleUserFavouriteAction };

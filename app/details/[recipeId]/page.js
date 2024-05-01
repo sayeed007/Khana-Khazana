@@ -3,11 +3,11 @@ import Image from "next/image";
 import PrepTime from '@/public/Icons/PrepTime.svg';
 import CookTime from '@/public/Icons/CookTime.svg';
 import Servings from '@/public/Icons/Servings.svg';
-import Share from '@/public/Icons/Share.svg';
 
 import { getBlurData } from '@/utils/blur-generator';
 import { getRecipeById } from "@/db/queries";
 import ToggleFavourite from "@/components/details/ToggleFavourite";
+import ShareComponent from "@/components/details/ShareComponent";
 
 
 export async function generateMetadata({ params: { recipeId } }) {
@@ -109,12 +109,11 @@ const RecipeDetailsPage = async ({ params: { recipeId } }) => {
                 recipeInfo={recipeInfo}
               />
               <div className="flex gap-2 text-gray-600 cursor-pointer hover:text-[#0E79F6]">
-                <div className="flex justify-center">
-                  <Share
-                    alt='Share'
-                  />
-                </div>
-                <span>Share</span>
+
+                <ShareComponent
+                  recipeInfo={recipeInfo}
+                />
+
               </div>
             </div>
           </div>

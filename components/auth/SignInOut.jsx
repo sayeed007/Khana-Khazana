@@ -9,6 +9,8 @@ const SignInOut = () => {
     const { auth, setAuth } = useAuth();
     const router = useRouter();
 
+    console.log(auth);
+
     const logout = () => {
         Cookies.remove('auth');
         setAuth(null);

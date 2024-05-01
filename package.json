@@ -17,6 +17,7 @@
     "plaiceholder": "^3.0.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-share": "^5.1.0",
     "resend": "^3.2.0",
     "sharp": "^0.33.3"
   },

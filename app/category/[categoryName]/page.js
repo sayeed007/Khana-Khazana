@@ -15,33 +15,30 @@ import RecipeCard from "@/components/landing/RecipeCard";
 
 
 export async function generateMetadata({ params: { categoryName } }) {
-  const categoryWiseRecipes = await getAllRecipesByCategory(categoryName);
+  const categoryWiseRecipes = await getAllRecipesByCategory(decodeURIComponent(categoryName));
 
-  // return {
-  //   title: `Khana Khazana - ${recipeInfo?.name}`,
-  //   description: recipeInfo?.description,
-  //   openGraph: {
-  //     images: [recipeInfo?.image]
-  //   }
-  // }
+  return {
+    title: `Khana Khazana - Category:${categoryName}`,
+    description: `Recipes for ${categoryName} & Recipes are: ${(categoryWiseRecipes?.map(recipe => `Name: ${recipe.name}, Description: ${recipe.description}`)).join('\n')}`,
+
+  }
 }
 
 
 const CategoryWiseRecipeListPage = async ({ params: { categoryName } }) => {
   const categoryWiseRecipes = await getAllRecipesByCategory(decodeURIComponent(categoryName));
 
-
   return (
     <>
 
-      <section class="container py-8">
+      <section className="container py-8">
         <div>
 
-          <h3 class="font-semibold text-xl">
+          <h3 className="font-semibold text-xl">
             {decodeURIComponent(categoryName)}
           </h3>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 my-8 justify-items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 my-8 justify-items-center">
 
             {
               categoryWiseRecipes.map((recipe) => (

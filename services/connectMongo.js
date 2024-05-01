@@ -10,6 +10,7 @@ async function connectMongo() {
         );
     }
     if (cached.connection) {
+        console.log('Connection stablish from cache.')
         return cached.connection;
     }
     if (!cached.promise) {
@@ -26,6 +27,8 @@ async function connectMongo() {
         cached.promise = undefined;
         throw e;
     }
+
+    console.log('Connection stablish and returned.')
     return cached.connection;
 }
 export default connectMongo;

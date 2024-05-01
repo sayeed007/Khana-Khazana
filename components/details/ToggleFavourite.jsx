@@ -16,8 +16,6 @@ const ToggleFavourite = (props) => {
     const { auth, setAuth } = useAuth();
     const [isFavourite, setIsFavourite] = useState(false);
 
-
-
     useEffect(() => {
         if (props?.recipeInfo?.id && auth?.favourites?.length > 0) {
             setIsFavourite(auth?.favourites?.includes(props?.recipeInfo?.id) ? true : false);
@@ -26,11 +24,11 @@ const ToggleFavourite = (props) => {
     }, [props?.recipeInfo?.id]);
 
 
-
     const performToggleFavourite = async () => {
 
-        if (auth && props) {
-            const userFavourite = await toggleUserFavouriteAction(auth, props?.recipeInfo?.id);
+
+        if (auth?.id && props) {
+            const userFavourite = await toggleUserFavouriteAction(auth?.id, props?.recipeInfo?.id);
 
             if (!(JSON.parse(userFavourite))?.error) {
 

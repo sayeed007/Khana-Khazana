@@ -1,20 +1,20 @@
 import { recipeModel } from "@/models/recipes-models";
 import { userModel } from "@/models/user-model";
-import mongoose from "mongoose";
 
 import {
     replaceMongoIdInArray,
     replaceMongoIdInObject,
 } from "@/utils/data-util";
-
+import { dbConnect } from "@/services/mongo";
+import connectMongo from "@/services/connectMongo";
 
 async function getAllRecipesCategory() {
-    // const allRecipes = await recipeModel.find().lean();
 
-    // const allCategory = [...new Set(allRecipes.map(item => item.category))];
 
-    // return allCategory;
     try {
+        await connectMongo();
+        // await dbConnect();
+
         const categories = await recipeModel.distinct("category");
 
         console.log('All Category: ' + categories);
@@ -30,6 +30,7 @@ async function getAllRecipesCategory() {
 async function getAllRecipesByCategory(category) {
 
     try {
+        await connectMongo();
 
         console.log('Category name for fetching recipes: ' + category);
 
@@ -52,6 +53,8 @@ async function getAllRecipesByCategory(category) {
 async function getAllRecipes() {
 
     try {
+        await connectMongo();
+
         const allRecipes = await recipeModel.find().lean();
 
         return replaceMongoIdInArray(allRecipes);
@@ -64,9 +67,13 @@ async function getAllRecipes() {
 async function getRecipeById(recipeId) {
 
     try {
+        await connectMongo();
+
         console.log('Recipe Id for fetching recipe: ' + recipeId);
 
-        const recipe = await recipeModel?.findById(recipeId)?.lean();
+        const recipe = await recipeModel?.findById(recipeId)?.maxTimeMS(30000)?.lean();
+
+        console.log(recipe);
         return replaceMongoIdInObject(recipe);
 
     } catch (error) {
@@ -78,10 +85,17 @@ async function getRecipeById(recipeId) {
 async function createUser(user) {
 
     try {
+        await connectMongo();
+
         console.log('Creating User with information: ' + user);
+
         const newUser = await userModel.create(user);
+
         console.log('User created successfully:', newUser);
-        return newUser;
+
+
+
+        return replaceMongoIdInObject(newUser.toObject());
 
     } catch (error) {
         console.error("Error creating user:", error.message);
@@ -92,6 +106,8 @@ async function createUser(user) {
 async function findUserByCredentials(credentials) {
 
     try {
+        await connectMongo();
+
         console.log('User Logging in with credentials');
 
         const user = await userModel.findOne(credentials).lean();
@@ -108,9 +124,11 @@ async function findUserByCredentials(credentials) {
 }
 
 
-async function toggleUserFavourite(auth, recipeId) {
+async function toggleUserFavourite(userID, recipeId) {
     try {
-        const user = await userModel.findById(auth?.id);
+        await connectMongo();
+        console.log(userID)
+        const user = await userModel.findById(userID);
 
         if (user) {
             const foundIndex = user.favourites.indexOf(recipeId);
@@ -133,13 +151,6 @@ async function toggleUserFavourite(auth, recipeId) {
         return { error: error };
     }
 }
-
-
-
-
-
-
-
 
 
 
