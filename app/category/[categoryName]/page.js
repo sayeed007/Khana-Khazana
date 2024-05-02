@@ -28,7 +28,6 @@ const CategoryWiseRecipeListPage = async ({ params: { categoryName } }) => {
   const categoryWiseRecipes = await getAllRecipesByCategory(decodeURIComponent(categoryName));
 
 
-  console.log(categoryWiseRecipes);
 
   return (
     <>
