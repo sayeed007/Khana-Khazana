@@ -37,8 +37,8 @@ async function getAllRecipesByCategory(category) {
         let allRecipes = [];
 
         if (category) {
-            const regex = new RegExp(category, "i");
-            allRecipes = await recipeModel.find({ category: { $regex: regex } }).lean();
+            // const regex = new RegExp(category, "i");
+            allRecipes = await recipeModel.find({ category: category }).lean();
         } else {
             allRecipes = await recipeModel.find().lean();
         }
@@ -78,7 +78,7 @@ async function getRecipeById(recipeId) {
 
     } catch (error) {
         console.error("Error fetching specific recipe by recipe id:", error);
-        return [];
+        return null;
     }
 }
 

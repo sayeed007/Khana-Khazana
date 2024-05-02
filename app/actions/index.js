@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from 'next/cache'
-import { createUser, findUserByCredentials, getRecipeById, toggleUserFavourite } from "@/db/queries";
+import { createUser, findUserByCredentials, toggleUserFavourite } from "@/db/queries";
 import { redirect } from "next/navigation";
 
 
